@@ -226,7 +226,7 @@ struct fsm
     {
         int num = items.size(); //×´Ì¬¸öÊý
         int line = terminal.size() + nonterminal.size() + 1;
-        vector<vector<string>> matrix(num, vector<string>(line));
+        vector<vector<string> > matrix(num, vector<string>(line));
 
         map<char, int> my_map;
         int m = 0;
