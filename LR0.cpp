@@ -10,26 +10,26 @@ using namespace std;
 
 template <typename T>
 
-int length(T &arr)
+int length(T& arr)
 {
     return sizeof(arr) / sizeof(arr[0]);
 }
 
-//ÊäÈëÎÄ·¨
+//è¾“å…¥æ–‡æ³•
 string G_input[] =
-    {
-        "S->E",
-        "E->aA",
-        "E->bB",
-        "A->cA",
-        "A->d",
-        "B->cB",
-        "B->d"};
+{
+    "S->E",
+    "E->aA",
+    "E->bB",
+    "A->cA",
+    "A->d",
+    "B->cB",
+    "B->d" };
 
-set<char> terminal;    //ÖÕ½á·û
-set<char> nonterminal; //·ÇÖÕ½á·û
+set<char> terminal;    //ç»ˆç»“ç¬¦
+set<char> nonterminal; //éç»ˆç»“ç¬¦
 
-//»ñÈ¡ÖÕ½á·ûºÍ·ÇÖÕ½á·û
+//è·å–ç»ˆç»“ç¬¦å’Œéç»ˆç»“ç¬¦
 void get_term_and_nonterm()
 {
     for (int i = 0; i < length(G_input); i++)
@@ -42,7 +42,7 @@ void get_term_and_nonterm()
         for (int j = 0; j < tmp.length(); j++)
         {
 
-            if (nonterminal.find(tmp[j]) == nonterminal.end()) //Î´ÕÒµ½
+            if (nonterminal.find(tmp[j]) == nonterminal.end()) //æœªæ‰¾åˆ°
             {
                 terminal.insert(tmp[j]);
             }
@@ -50,13 +50,13 @@ void get_term_and_nonterm()
     }
 }
 
-//¼ÓÈë¡°.¡±
-void add_point(string &a)
+//åŠ å…¥â€œ.â€
+void add_point(string& a)
 {
     a.insert(3, 1, '.');
 }
-//ÒÆ¶¯¡°.¡±
-void move_point(string &a)
+//ç§»åŠ¨â€œ.â€
+void move_point(string& a)
 {
     int index = a.find('.');
 
@@ -64,37 +64,37 @@ void move_point(string &a)
     a[index + 1] = '.';
 }
 
-//Ê¹ÓÃÁÚ½Ó±íµÄÍ¼½á¹¹
-int t_id = 0; //×´Ì¬ºÅ
+//ä½¿ç”¨é‚»æ¥è¡¨çš„å›¾ç»“æ„
+int t_id = 0; //çŠ¶æ€å·
 
 struct arc_item;
-struct item //×´Ì¬,Ïàµ±ÓÚ½Úµã
+struct item //çŠ¶æ€,ç›¸å½“äºèŠ‚ç‚¹
 {
-    set<string> production; //×´Ì¬°üº¬µÄ²úÉúÊ½
-    arc_item *next;         //Ö¸ÏòÁ¬½ÓµÄÄÇ¸ö×´Ì¬
-    int id;                 //×´Ì¬ºÅ
-    int state = -1;         //×´Ì¬,ÓÃÓÚÅĞ¶ÏÊÇ·ñ½øĞĞ¹æÔ¼»ò×ªÒÆ
+    set<string> production; //çŠ¶æ€åŒ…å«çš„äº§ç”Ÿå¼
+    arc_item* next;         //æŒ‡å‘è¿æ¥çš„é‚£ä¸ªçŠ¶æ€
+    int id;                 //çŠ¶æ€å·
+    int state = -1;         //çŠ¶æ€,ç”¨äºåˆ¤æ–­æ˜¯å¦è¿›è¡Œè§„çº¦æˆ–è½¬ç§»
 
-    item(string p) //³õÊ¼»¯º¯Êı
+    item(string p) //åˆå§‹åŒ–å‡½æ•°
     {
         production.insert(p);
         id = t_id;
         t_id++;
         next = NULL;
     }
-    void revise() //¸üĞÂ²úÉúÊ½
+    void revise() //æ›´æ–°äº§ç”Ÿå¼
     {
-        bool done = 0; //ÊÇ·ñ¼ÌĞø¸üĞÂ
+        bool done = 0; //æ˜¯å¦ç»§ç»­æ›´æ–°
         while (done == 0)
         {
             done = 1;
             set<string>::iterator i;
             int num = production.size();
-            for (i = production.begin(); i != production.end(); i++) // ²úÉúÊ½µÄ±éÀú
+            for (i = production.begin(); i != production.end(); i++) // äº§ç”Ÿå¼çš„éå†
             {
                 string tmp = *i;
                 int index = tmp.find('.');
-                if (index == tmp.length() - 1) //'.'ÒÑ¾­ÔÚ×îºóÁË
+                if (index == tmp.length() - 1) //'.'å·²ç»åœ¨æœ€åäº†
                 {
                     for (int k = 0; k < length(G_input); k++)
                     {
@@ -106,7 +106,7 @@ struct item //×´Ì¬,Ïàµ±ÓÚ½Úµã
                     }
                     continue;
                 }
-                if (nonterminal.find(tmp[index + 1]) != nonterminal.end()) //'.'ºóÊÇÒ»¸ö·ÇÖÕ½á·û£¬½øĞĞ±Õ°ü¼ÆËã
+                if (nonterminal.find(tmp[index + 1]) != nonterminal.end()) //'.'åæ˜¯ä¸€ä¸ªéç»ˆç»“ç¬¦ï¼Œè¿›è¡Œé—­åŒ…è®¡ç®—
                 {
                     for (int g = 0; g < length(G_input); g++)
                     {
@@ -119,14 +119,14 @@ struct item //×´Ì¬,Ïàµ±ÓÚ½Úµã
                     }
                 }
             }
-            if (production.size() > num) //¸öÊıÓĞÔö¼Ó
-                done = 0;                //ĞèÒª¼ÌĞø¸üĞÂ
+            if (production.size() > num) //ä¸ªæ•°æœ‰å¢åŠ 
+                done = 0;                //éœ€è¦ç»§ç»­æ›´æ–°
         }
     }
 
     bool operator==(const item W)
     {
-        return production == W.production; //¸ù¾İ²úÉúÊ½ÅĞ¶ÏÊÇ·ñÏàµÈ
+        return production == W.production; //æ ¹æ®äº§ç”Ÿå¼åˆ¤æ–­æ˜¯å¦ç›¸ç­‰
     }
     bool operator<(const item W) const
     {
@@ -137,16 +137,16 @@ struct item //×´Ì¬,Ïàµ±ÓÚ½Úµã
     }
 };
 
-struct arc_item //±ß½Úµã
+struct arc_item //è¾¹èŠ‚ç‚¹
 {
-    int id; //×´Ì¬ºÅ
-    arc_item *next;
-    char weight; //Á¬½Ó±ßµÄÈ¨ÖØ£¬¼´Îª×´Ì¬×ªÒÆµÄÊäÈëµÄÖµ
+    int id; //çŠ¶æ€å·
+    arc_item* next;
+    char weight; //è¿æ¥è¾¹çš„æƒé‡ï¼Œå³ä¸ºçŠ¶æ€è½¬ç§»çš„è¾“å…¥çš„å€¼
 };
 
 struct fsm
 {
-    vector<item> items; //×´Ì¬¼¯
+    vector<item> items; //çŠ¶æ€é›†
 
     fsm(string s)
     {
@@ -157,30 +157,31 @@ struct fsm
         items.push_back(item1);
     }
 
-    //×´Ì¬¼¯¹¹Ôì
-    void structure() 
+    //çŠ¶æ€é›†æ„é€ 
+    void structure()
     {
-        bool done = 0; //¹¹ÔìÊÇ·ñÍê³É
+        bool done = 0; //æ„é€ æ˜¯å¦å®Œæˆ
         int i = 0;
         while (done == 0 || i <= items.size() - 1)
         {
 
-            set<string>::iterator j;
+            set<string>::iterator j= items[i].production.begin() ;
             done = 1;
-            for (j = items[i].production.begin(); j != items[i].production.end(); j++) // ²úÉúÊ½µÄ±éÀú
+            while (j != items[i].production.end()) // äº§ç”Ÿå¼çš„éå†
             {
                 string tmp = *j;
                 int index = tmp.find('.');
-                if (index == tmp.length() - 1) //'.'ÒÑ¾­ÔÚ×îºóÁË
+                if (index == tmp.length() - 1) //'.'å·²ç»åœ¨æœ€åäº†
+                {   ++j;
                     continue;
-
-                char trans = tmp[index + 1]; //×ªÒÆ×´Ì¬ËùĞèµÄ×Ö·û
+                }
+                char trans = tmp[index + 1]; //è½¬ç§»çŠ¶æ€æ‰€éœ€çš„å­—ç¬¦
                 move_point(tmp);
                 item new_item = item(tmp);
                 new_item.revise();
 
                 bool same = false;
-                int n; //ÓÃÓÚ±ê¼ÇÒÑ´æÔÚµÄ×´Ì¬
+                int n; //ç”¨äºæ ‡è®°å·²å­˜åœ¨çš„çŠ¶æ€
                 for (int k = 0; k < items.size(); k++)
                 {
                     if (new_item == items[k])
@@ -190,41 +191,44 @@ struct fsm
                         break;
                     }
                 }
-                if (same == true) //ÒÑ¾­´æÔÚ¸Ã×´Ì¬¼¯
+                if (same == true) //å·²ç»å­˜åœ¨è¯¥çŠ¶æ€é›†
                 {
                     t_id--;
-                    arc_item *edge = new arc_item();
+                    arc_item* edge = new arc_item();
                     edge->next = items[i].next;
                     edge->id = items[n].id;
                     edge->weight = trans;
 
-                    item &p_item = const_cast<item &>(items[i]); //ÓÉÓÚÔÚsetÖĞÔªËØÎªconstÎŞ·¨ĞŞ¸Ä£¬ĞèÒªÊ¹ÓÃconst_castÀ´½øĞĞÀàĞÍĞŞ¸Ä
+                    item& p_item = const_cast<item&>(items[i]); //ç”±äºåœ¨setä¸­å…ƒç´ ä¸ºconstæ— æ³•ä¿®æ”¹ï¼Œéœ€è¦ä½¿ç”¨const_castæ¥è¿›è¡Œç±»å‹ä¿®æ”¹
 
-                    p_item.next = edge; //½«±ß½ÓÈë
+                    p_item.next = edge; //å°†è¾¹æ¥å…¥
                 }
                 else
                 {
+                    string tmp_find = *j;
                     items.push_back(new_item);
-                    done = 0; //ÓĞĞÂµÄ×´Ì¬¼¯£¬ĞèÒª¼ÌĞø½øĞĞ¹¹Ôì
-                    //Ê¹ÓÃ²åÍ··¨½ÓÈë±ß½Úµã
-                    arc_item *edge = new arc_item();
+                    j=items[i].production.find(tmp_find);
+                    done = 0; //æœ‰æ–°çš„çŠ¶æ€é›†ï¼Œéœ€è¦ç»§ç»­è¿›è¡Œæ„é€ 
+                    //ä½¿ç”¨æ’å¤´æ³•æ¥å…¥è¾¹èŠ‚ç‚¹
+                    arc_item* edge = new arc_item();
                     edge->next = items[i].next;
                     edge->id = new_item.id;
                     edge->weight = trans;
 
-                    item &p_item = const_cast<item &>(items[i]); //ÓÉÓÚÔÚsetÖĞÔªËØÎªconstÎŞ·¨ĞŞ¸Ä£¬ĞèÒªÊ¹ÓÃconst_castÀ´½øĞĞÀàĞÍĞŞ¸Ä
+                    item& p_item = const_cast<item&>(items[i]); //ç”±äºåœ¨setä¸­å…ƒç´ ä¸ºconstæ— æ³•ä¿®æ”¹ï¼Œéœ€è¦ä½¿ç”¨const_castæ¥è¿›è¡Œç±»å‹ä¿®æ”¹
 
-                    p_item.next = edge; //½«±ß½ÓÈë
+                    p_item.next = edge; //å°†è¾¹æ¥å…¥
                 }
+                ++j;
             }
             i++;
         }
     }
 
-    //»æÖÆaction goto±í
+    //ç»˜åˆ¶action gotoè¡¨
     void show_table()
     {
-        int num = items.size(); //×´Ì¬¸öÊı
+        int num = items.size(); //çŠ¶æ€ä¸ªæ•°
         int line = terminal.size() + nonterminal.size() + 1;
         vector<vector<string> > matrix(num, vector<string>(line));
 
@@ -249,76 +253,76 @@ struct fsm
 
         for (int i = 0; i < items.size(); i++)
         {
-            if(items[i].state==0)
+            if (items[i].state == 0)
             {
-                matrix[i][my_map['#']]="acc";
+                matrix[i][my_map['#']] = "acc";
             }
-            else if(items[i].state>0)
+            else if (items[i].state > 0)
             {
-                for(int k=0;k<=my_map['#'];k++)
+                for (int k = 0; k <= my_map['#']; k++)
                 {
-                    matrix[i][k]="r"+to_string(items[i].state);
+                    matrix[i][k] = "r" + to_string(items[i].state);
                 }
-                
+
             }
             else
             {
-                arc_item *tmp = items[i].next;
+                arc_item* tmp = items[i].next;
                 while (tmp != NULL)
                 {
-                    if(nonterminal.find(tmp->weight)==nonterminal.end())
+                    if (nonterminal.find(tmp->weight) == nonterminal.end())
                     {
-                        matrix[i][my_map[tmp->weight]]="S"+to_string(tmp->id);
-                        
+                        matrix[i][my_map[tmp->weight]] = "S" + to_string(tmp->id);
+
                     }
-                    else matrix[i][my_map[tmp->weight]]=to_string(tmp->id);
-                    tmp=tmp->next;
+                    else matrix[i][my_map[tmp->weight]] = to_string(tmp->id);
+                    tmp = tmp->next;
                 }
             }
-            
+
         }
 
-    //----------------------------------------  ----------------------------------------
+        //----------------------------------------  ----------------------------------------
 
-        cout<<setw(5)<<"×´Ì¬"<<"|";
-        cout<<setw(25)<<"ACTION|";
-        cout<<setw(15)<<"GOTO"<<endl;
-        cout<<setw(5)<<""<<"|";
-        cout<<setw(5)<<"a|"<<setw(5)<<"b|"<<setw(5)<<"c|"<<setw(5)<<"d|"<<setw(5)<<"#|"
-        <<setw(5)<<"A|"<<setw(5)<<"B|"<<setw(5)<<"E|"<<endl;
-        for(int i=0;i<num;i++)
+        cout << setw(5) << "çŠ¶æ€" << "|";
+        cout << setw(25) << "ACTION|";
+        cout << setw(15) << "GOTO" << endl;
+        cout << setw(5) << "" << "|";
+        cout << setw(5) << "a|" << setw(5) << "b|" << setw(5) << "c|" << setw(5) << "d|" << setw(5) << "#|"
+            << setw(5) << "A|" << setw(5) << "B|" << setw(5) << "E|" << endl;
+        for (int i = 0; i < num; i++)
         {
-            cout<<setw(5)<<i<<"|";
-            for(int j=0;j<line-1;j++)
+            cout << setw(5) << i << "|";
+            for (int j = 0; j < line - 1; j++)
             {
-                cout<<setw(5)<<matrix[i][j]+"|";
+                cout << setw(5) << matrix[i][j] + "|";
             }
-            cout<<endl;
+            cout << endl;
         }
 
         ofstream out("output.txt");
-        out<<"LR(0)µÄ·ÖÎö±íÈçÏÂ"<<endl<<endl;
+        out << "LR(0)çš„åˆ†æè¡¨å¦‚ä¸‹" << endl << endl;
 
-        out<<setw(5)<<"×´Ì¬"<<"|";
-        out<<setw(25)<<"ACTION|";
-        out<<setw(15)<<"GOTO"<<endl;
-        out<<setw(5)<<""<<"|";
-        out<<setw(5)<<"a|"<<setw(5)<<"b|"<<setw(5)<<"c|"<<setw(5)<<"d|"<<setw(5)<<"#|"
-        <<setw(5)<<"A|"<<setw(5)<<"B|"<<setw(5)<<"E|"<<endl;
-        for(int i=0;i<num;i++)
+        out << setw(5) << "çŠ¶æ€" << "|";
+        out << setw(25) << "ACTION|";
+        out << setw(15) << "GOTO" << endl;
+        out << setw(5) << "" << "|";
+        out << setw(5) << "a|" << setw(5) << "b|" << setw(5) << "c|" << setw(5) << "d|" << setw(5) << "#|"
+            << setw(5) << "A|" << setw(5) << "B|" << setw(5) << "E|" << endl;
+        for (int i = 0; i < num; i++)
         {
-            out<<setw(5)<<i<<"|";
-            for(int j=0;j<line-1;j++)
+            out << setw(5) << i << "|";
+            for (int j = 0; j < line - 1; j++)
             {
-                out<<setw(5)<<matrix[i][j]+"|";
+                out << setw(5) << matrix[i][j] + "|";
             }
-            out<<endl;
+            out << endl;
         }
 
-    
-    
+
+
     }
-    
+
 
 };
 
@@ -328,13 +332,13 @@ int main()
     get_term_and_nonterm();
     string first = "S->E";
 
-    
+
     fsm lr_0 = fsm(first);
     lr_0.structure();
 
     lr_0.show_table();
 
-    
+
 
     system("pause");
 }
